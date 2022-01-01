@@ -39,17 +39,6 @@ const init = () => {
     render();
 }
 
-const copySudoku = ( a ) => {
-    let b = [];
-    for( let y=0; y<9; y++ ){
-        b[y] = [];
-        for( let x=0; x<9; x++ ){
-            b[y][x] = a[y][x];
-        }
-    }
-    return b;
-}
-
 const initExample = () => {
     stop();
     sudoku = copySudoku( example );
@@ -83,7 +72,7 @@ const solve = () => {
     // create a backup copy of the sudoku to be able to revert to
     partialSudoku = copySudoku( sudoku );
     // set the interval for the solve steps
-    iv = setInterval( step, 1 );
+    iv = setInterval( step, 100 );
 }
 
 const step = () => {
@@ -95,29 +84,24 @@ const step = () => {
         stop();
         return;
     }
+    // Get the easiest position to solve
+    let bestPosition = getBestEmptyPosition( empty );
+    let [ px, py, possibleValues ] = bestPosition;
+    // if the lowest number of possibilities is zero, the solution is false
+    if( possibleValues.length < 1 ){
+        console.log( 'oops' );
+        // return to last known correct partial solution
+        sudoku = copySudoku( partialSudoku );
+        return;
+    }
     // check for positions with just one possible value
     if( mode == 1 ){
-        let bestPosition = getBestEmptyPosition( empty );
-        let [ px, py, possibleValues ] = bestPosition;
         if( possibleValues.length == 1 ){
             partialSudoku[py][px] = possibleValues[0];
             sudoku[py][px] = possibleValues[0];
         } else {
-            mode = 2;
+            mode = 2; // guesses from now on
         }
-        render();
-        return;
-    }
-    // find a random empty position to fill
-    let position = getBestEmptyPosition( empty );
-    let [ px, py ] = position;
-    //console.log( position );
-    possibleValues = getPossibleValues( position );
-    // Check if possible values is empty, indicating a failed attempt
-    if( possibleValues == undefined || possibleValues.length < 1 ){
-        console.log( 'oops' );
-        // return to last known correct partial solution
-        sudoku = copySudoku( partialSudoku );
     } else {
         // fill in a random number from the possible values
         let guess = possibleValues[ Math.floor( Math.random() * possibleValues.length ) ];
@@ -144,18 +128,19 @@ const getEmptyPositions = () => {
 }
 
 const getPossibleValues = ( position ) => {
-    values = [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ];
+    let values = [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ];
+    let excluded = [];
     let [ px, py ] = position;
     // check column
     for( let x=0; x<9; x++ ){
         if( sudoku[py][x] !== 0 ){
-            values = values.filter( val => val !== sudoku[py][x] );
+            excluded.push( sudoku[py][x] );
         }
     }
     // check row
     for( let y=0; y<9; y++ ){
         if( sudoku[y][px] !== 0 ){
-            values = values.filter( val => val !== sudoku[y][px] );
+            excluded.push( sudoku[y][px] );
         }
     }
     // check square
@@ -164,12 +149,12 @@ const getPossibleValues = ( position ) => {
     for( let y=startY; y<startY+3; y++ ){
         for( let x=startX; x<startX+3; x++ ){
             if( sudoku[y][x] !== 0 ){
-                values = values.filter( val => val !== sudoku[y][x] );
+                excluded.push( sudoku[y][x] );
             }
         }
     }
-    //console.log( px + ',' + py );
-    //console.log( values );
+    // remove excluded values from the values array and return the result
+    values = values.filter( val => ! excluded.includes( val ) );
     return values;
 }
 
@@ -187,6 +172,17 @@ const getBestEmptyPosition = ( empty ) => {
         }
     }
     return best;
+}
+
+const copySudoku = ( a ) => {
+    let b = [];
+    for( let y=0; y<9; y++ ){
+        b[y] = [];
+        for( let x=0; x<9; x++ ){
+            b[y][x] = a[y][x];
+        }
+    }
+    return b;
 }
 
 document.addEventListener( 'DOMContentLoaded', init, false );
