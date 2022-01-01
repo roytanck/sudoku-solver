@@ -11,8 +11,9 @@ const example = [
 ];
 
 let sudoku = [];
-let initialSudoku = [];
+let partialSudoku = [];
 let iv = null;
+let mode = 1; // set to 2 when solution contains guesses
 
 const init = () => {
     // create 9*9 input fields
@@ -67,30 +68,69 @@ const initZeros = () => {
 }
 
 const render = () => {
-    //console.log( 'render' );
     for( let y=0; y<9; y++ ){
         for( let x=0; x<9; x++ ){
             let field = document.getElementById( 'field-' + x + y );
             let value = ( sudoku[y][x] == 0 ) ? '' : sudoku[y][x];
-            field.setAttribute( 'value', value );
+            field.value = value;
         }
     }
 }
 
 const solve = () => {
     stop();
+    mode = 1;
     // create a backup copy of the sudoku to be able to revert to
-    initialSudoku = copySudoku( sudoku );
+    partialSudoku = copySudoku( sudoku );
     // set the interval for the solve steps
     iv = setInterval( step, 1 );
+}
+
+const step = () => {
+    // find empty positions
+    let empty = getEmptyPositions();
+    // check if no empty position, indicating succes
+    if( empty.length < 1 ){
+        console.log( 'succes' );
+        stop();
+        return;
+    }
+    // check for positions with just one possible value
+    if( mode == 1 ){
+        let bestPosition = getBestEmptyPosition( empty );
+        let [ px, py, possibleValues ] = bestPosition;
+        if( possibleValues.length == 1 ){
+            partialSudoku[py][px] = possibleValues[0];
+            sudoku[py][px] = possibleValues[0];
+        } else {
+            mode = 2;
+        }
+        render();
+        return;
+    }
+    // find a random empty position to fill
+    let position = getBestEmptyPosition( empty );
+    let [ px, py ] = position;
+    //console.log( position );
+    possibleValues = getPossibleValues( position );
+    // Check if possible values is empty, indicating a failed attempt
+    if( possibleValues == undefined || possibleValues.length < 1 ){
+        console.log( 'oops' );
+        // return to last known correct partial solution
+        sudoku = copySudoku( partialSudoku );
+    } else {
+        // fill in a random number from the possible values
+        let guess = possibleValues[ Math.floor( Math.random() * possibleValues.length ) ];
+        sudoku[py][px] = guess;
+    }
+    render();
 }
 
 const stop = () => {
     clearInterval( iv );
 }
 
-const step = () => {
-    //console.log( 'step' );
+const getEmptyPositions = () => {
     // find empty positions
     let empty = [];
     for( let y=0; y<9; y++ ){
@@ -100,30 +140,7 @@ const step = () => {
             }
         }
     }
-    // check if no empty position, indicating succes
-    if( empty.length < 1 ){
-        console.log( 'succes' );
-        stop();
-        return;
-    }
-    //console.log( empty );
-    // find a random empty position to fill
-    let position = empty[ Math.floor( Math.random() * empty.length ) ];
-    let [ px, py ] = position;
-    //console.log( position );
-    possibleValues = getPossibleValues( position );
-    // Check if possible values is empty, indicating a failed attempt
-    if( possibleValues == undefined || possibleValues.length < 1 ){
-        console.log( 'oops' );
-        //stop();
-        sudoku = copySudoku( initialSudoku );
-
-    } else {
-        // fill in a random number from the possible values
-        let guess = possibleValues[ Math.floor( Math.random() * possibleValues.length ) ];
-        sudoku[py][px] = guess;
-        render();
-    }
+    return empty;
 }
 
 const getPossibleValues = ( position ) => {
@@ -151,8 +168,25 @@ const getPossibleValues = ( position ) => {
             }
         }
     }
+    //console.log( px + ',' + py );
     //console.log( values );
     return values;
+}
+
+const getBestEmptyPosition = ( empty ) => {
+    let lowest = 10;
+    let best = [];
+    for( let i=0; i<empty.length; i++ ){
+        let possibleValues = getPossibleValues( empty[i] );
+        //console.log( i + ' - ' + possibleValues.length );
+        if( possibleValues.length < lowest ){
+            best[0] = empty[i][0];
+            best[1] = empty[i][1];
+            best[2] = possibleValues;
+            lowest = possibleValues.length;
+        }
+    }
+    return best;
 }
 
 document.addEventListener( 'DOMContentLoaded', init, false );
