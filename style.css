@@ -1,0 +1,44 @@
+body {
+    padding: 2rem;
+    margin: 0;
+    background-color: #eee;
+    color: #444;
+    font-family: sans-serif;
+}
+
+a {
+    color: #ccc;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+#container {
+    margin: 0 auto 1rem auto;
+}
+
+#container input {
+    display: inline;
+    width: 2rem;
+    height: 2rem;
+    font-size: 1.4rem;
+    font-weight: bold;
+    line-height: 2rem;
+    text-align: center;
+    color: #444;
+    border: none;
+    box-shadow: inset 0px 0px 1px #000;
+}
+
+#container input.block2 {
+    background-color: #ddd;
+}
+
+button {
+    font-family: sans-serif;
+    padding: 0.5rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+}
