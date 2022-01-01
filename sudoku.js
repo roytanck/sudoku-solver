@@ -23,9 +23,11 @@ const init = () => {
         for( let x=0; x<9; x++ ){
             let field = document.createElement( 'input' );
             field.setAttribute( 'id', 'field-' + x + y );
+            field.setAttribute( 'maxlength', 1 );
             field.setAttribute( 'value', '' );
             let cssClass = ( Math.floor( x / 3 ) + Math.floor( y / 3 ) ) % 2 == 1 ? 'block1' : 'block2';
             field.setAttribute( 'class', cssClass );
+            field.addEventListener( 'change', inputHandler, false );
             row.appendChild( field );
         }
     }
@@ -163,7 +165,6 @@ const getBestEmptyPosition = ( empty ) => {
     let best = [];
     for( let i=0; i<empty.length; i++ ){
         let possibleValues = getPossibleValues( empty[i] );
-        //console.log( i + ' - ' + possibleValues.length );
         if( possibleValues.length < lowest ){
             best[0] = empty[i][0];
             best[1] = empty[i][1];
@@ -172,6 +173,13 @@ const getBestEmptyPosition = ( empty ) => {
         }
     }
     return best;
+}
+
+const inputHandler = ( event ) => {
+    let x = parseInt( event.target.id.charAt( 6 ) );
+    let y = parseInt( event.target.id.charAt( 7 ) );
+    sudoku[y][x] = parseInt( event.target.value );
+    render();
 }
 
 const copySudoku = ( a ) => {
