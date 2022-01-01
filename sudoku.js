@@ -19,7 +19,7 @@ const init = () => {
     // create 9*9 input fields
     for( let y=0; y<9; y++ ){
         let row = document.createElement( 'div' );
-        document.getElementById( 'container' ).appendChild( row );
+        document.getElementById( 'puzzle' ).appendChild( row );
         for( let x=0; x<9; x++ ){
             let field = document.createElement( 'input' );
             field.setAttribute( 'id', 'field-' + x + y );
@@ -72,7 +72,7 @@ const solve = () => {
     // create a backup copy of the sudoku to be able to revert to
     partialSudoku = copySudoku( sudoku );
     // set the interval for the solve steps
-    iv = setInterval( step, 100 );
+    iv = setInterval( step, 10 );
 }
 
 const step = () => {
