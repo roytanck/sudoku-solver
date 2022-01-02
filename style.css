@@ -57,7 +57,7 @@ button {
     border-radius: 0.25rem;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 600px) {
     body {
         padding: 1rem;
     }
@@ -69,7 +69,7 @@ button {
     }
 }
 
-@media screen and (max-width: 350px) {
+@media screen and (max-width: 400px) {
     #puzzle input {
         width: 1.5rem;
         height: 1.5rem;
