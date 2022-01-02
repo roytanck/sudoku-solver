@@ -25,7 +25,7 @@ const init = () => {
             field.setAttribute( 'id', 'field-' + x + y );
             field.setAttribute( 'maxlength', 1 );
             field.setAttribute( 'value', '' );
-            let cssClass = ( Math.floor( x / 3 ) + Math.floor( y / 3 ) ) % 2 == 1 ? 'block1' : 'block2';
+            let cssClass = ( Math.floor( x / 3 ) + Math.floor( y / 3 ) ) % 2 == 1 ? 'odd' : 'even';
             field.setAttribute( 'class', cssClass );
             field.addEventListener( 'change', inputHandler, false );
             row.appendChild( field );
