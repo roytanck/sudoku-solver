@@ -35,7 +35,6 @@ const init = () => {
     document.getElementById( 'example' ).addEventListener("click", initExample, false);
     document.getElementById( 'clear' ).addEventListener("click", initZeros, false);
     document.getElementById( 'solve' ).addEventListener("click", solve, false);
-    document.getElementById( 'stop' ).addEventListener("click", stop, false);
     // reset the board
     initZeros();
     render();
