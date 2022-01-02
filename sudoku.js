@@ -10,6 +10,18 @@ const example = [
     [ 9, 0, 0, 1, 0, 0, 0, 2, 3 ],
 ];
 
+const example2 = [
+    [ 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+    [ 0, 0, 0, 0, 0, 3, 0, 8, 5 ],
+    [ 0, 0, 1, 0, 2, 0, 0, 0, 0 ],
+    [ 0, 0, 0, 5, 0, 7, 0, 0, 0 ],
+    [ 0, 0, 4, 0, 0, 0, 1, 0, 0 ],
+    [ 0, 9, 0, 0, 0, 0, 0, 0, 0 ],
+    [ 5, 0, 0, 0, 0, 0, 0, 7, 3 ],
+    [ 0, 0, 2, 0, 1, 0, 0, 0, 0 ],
+    [ 0, 0, 0, 0, 4, 0, 0, 0, 9 ],
+];
+
 let sudoku = [];
 let partialSudoku = [];
 let iv = null;
@@ -33,6 +45,7 @@ const init = () => {
     }
     // button event handlers
     document.getElementById( 'example' ).addEventListener("click", initExample, false);
+    document.getElementById( 'example2' ).addEventListener("click", initExample2, false);
     document.getElementById( 'clear' ).addEventListener("click", initZeros, false);
     document.getElementById( 'solve' ).addEventListener("click", solve, false);
     // reset the board
@@ -43,6 +56,12 @@ const init = () => {
 const initExample = () => {
     stop();
     sudoku = copySudoku( example );
+    render();
+}
+
+const initExample2 = () => {
+    stop();
+    sudoku = copySudoku( example2 );
     render();
 }
 
@@ -73,7 +92,7 @@ const solve = () => {
     // create a backup copy of the sudoku to be able to revert to
     partialSudoku = copySudoku( sudoku );
     // set the interval for the solve steps
-    iv = setInterval( step, 10 );
+    iv = setInterval( step, 1 );
 }
 
 const step = () => {
@@ -93,6 +112,7 @@ const step = () => {
         console.log( 'oops' );
         // return to last known correct partial solution
         sudoku = copySudoku( partialSudoku );
+        mode = 1;
         return;
     }
     // check for positions with just one possible value
@@ -125,6 +145,10 @@ const getEmptyPositions = () => {
             }
         }
     }
+    // randomize the array before returning
+    empty.sort( ( a, b ) => {
+        return ( Math.random() < 0.5 ) ? -1 : 1;
+    } );
     return empty;
 }
 
