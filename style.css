@@ -42,6 +42,10 @@ a:hover {
     box-shadow: inset 0px 0px 1px #000;
 }
 
+#puzzle input:focus-visible {
+    position: relative;
+}
+
 #puzzle input.even {
     background-color: rgba(255,255,255,0.6);
 }
