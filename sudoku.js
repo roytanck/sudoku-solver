@@ -181,7 +181,8 @@ const getBestEmptyPosition = ( empty ) => {
 const inputHandler = ( event ) => {
     let x = parseInt( event.target.id.charAt( 6 ) );
     let y = parseInt( event.target.id.charAt( 7 ) );
-    sudoku[y][x] = parseInt( event.target.value );
+    let value = parseInt( event.target.value );
+    sudoku[y][x] = isNaN( value ) ? 0 : value;
     render();
 }
 
