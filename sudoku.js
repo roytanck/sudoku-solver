@@ -125,6 +125,10 @@ const getEmptyPositions = () => {
             }
         }
     }
+    // randomize the array before returning
+    empty.sort( ( a, b ) => {
+        return ( Math.random() < 0.5 ) ? -1 : 1;
+    } );
     return empty;
 }
 
