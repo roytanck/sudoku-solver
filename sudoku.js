@@ -24,8 +24,8 @@ const init = () => {
             let field = document.createElement( 'input' );
             field.setAttribute( 'id', 'field-' + x + y );
             field.setAttribute( 'maxlength', 1 );
-            field.setAttribute('pattern' , '[1-9]');
-            field.setAttribute('inputmode' , 'numeric');
+            field.setAttribute( 'pattern' , '[1-9]' );
+            field.setAttribute( 'inputmode' , 'numeric' );
             field.setAttribute( 'value', '' );
             let cssClass = ( Math.floor( x / 3 ) + Math.floor( y / 3 ) ) % 2 == 1 ? 'odd' : 'even';
             field.setAttribute( 'class', cssClass );
