@@ -30,6 +30,7 @@ const init = () => {
             let cssClass = ( Math.floor( x / 3 ) + Math.floor( y / 3 ) ) % 2 == 1 ? 'odd' : 'even';
             field.setAttribute( 'class', cssClass );
             field.addEventListener( 'change', inputHandler, false );
+            field.addEventListener( 'focus', clickHandler, false );
             row.appendChild( field );
         }
     }
@@ -186,6 +187,10 @@ const inputHandler = ( event ) => {
     let value = parseInt( event.target.value );
     sudoku[y][x] = isNaN( value ) ? 0 : value;
     render();
+}
+
+const clickHandler = ( event ) => {
+    event.target.select();
 }
 
 const copySudoku = ( a ) => {
