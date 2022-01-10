@@ -5,3 +5,6 @@ The should work pretty well against human-solvable sudoku puzzles. Sudokus desig
 
 ## Usage
 Download or clone the code, and open index.html in a modern browser.
+
+## Demo
+[tanck.nl/sudoku](https://tanck.nl/sudoku/)
